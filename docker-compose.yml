@@ -1,3 +1,5 @@
+# Docker-compose file for spinning up a local MySQL database.
+
 version: "3"
 services:
   database:
