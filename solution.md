@@ -30,6 +30,8 @@ by doing the following:
 2. In [application.properties](src/main/resources/application.properties), comment out the mentioned lines so the configuration is correct
    for the persister you've chosen.
    
+Note that the database is configured to soft-delete items so they can be recovered in the event of accidental deletion.
+   
 ## Configuration
 
 The following configuration options are available either in the environment or [application.properties](src/main/resources/application.properties), 
@@ -51,3 +53,4 @@ Beyond this implementation, here are some things we could add to the app in the 
 * Nullability annotations on both entities and DTOs so it's easy to catch when we should be performing null-checks
 * Configuration for the server hostname and perhaps HTTPS credentials, because traffic should be sent securely
 * Integrate `runPurpleCowApp.sh` into the gradle file so we can just run a single task and spin up the server and database with one tool
+* Add a database procedure triggered daily to clean up the soft-deleted items to manage database storage
