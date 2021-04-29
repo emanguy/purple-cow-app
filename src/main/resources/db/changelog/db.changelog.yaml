@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: erittenhouse-basic-database-setup
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE items (
+                    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(128) NOT NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE NOW(),
+                    deleted_at TIMESTAMP NULL DEFAULT NULL
+              );
+      rollback:
+        - sql:
+            sql: >
+              DROP TABLE items;

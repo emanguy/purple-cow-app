@@ -14,8 +14,11 @@ import java.util.List;
 public class ItemService {
     private final ItemPersister itemPersister;
 
+    /**
+     * Constructor for ItemService. You can change the qualifier to change the used persister implementation.
+     */
     @Autowired
-    public ItemService(@Qualifier("mem") ItemPersister itemPersister) {
+    public ItemService(@Qualifier("db") ItemPersister itemPersister) {
         this.itemPersister = itemPersister;
     }
 

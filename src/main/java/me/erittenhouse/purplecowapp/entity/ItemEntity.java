@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import me.erittenhouse.purplecowapp.dto.ItemDto;
+import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 
@@ -11,11 +12,12 @@ import org.joda.time.LocalDate;
 @AllArgsConstructor
 public class ItemEntity {
     private int id;
-    @NonNull
     private String name;
-    @NonNull
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate createdAt;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate updatedAt;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate deletedAt;
 
     public ItemDto toDto() {
