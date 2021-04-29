@@ -1,26 +1,30 @@
 package me.erittenhouse.purplecowapp.service;
 
-import me.erittenhouse.purplecowapp.entity.ItemEntity;
 import me.erittenhouse.purplecowapp.dto.CreateItemDto;
 import me.erittenhouse.purplecowapp.dto.UpdateItemDto;
-import org.joda.time.LocalDate;
+import me.erittenhouse.purplecowapp.entity.ItemEntity;
+import me.erittenhouse.purplecowapp.persistence.ItemPersister;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class ItemService {
-    private final List<ItemEntity> inMemoryItems = new ArrayList<>();
-    private final Random randomGenerator = new Random();
+    private final ItemPersister itemPersister;
+
+    @Autowired
+    public ItemService(@Qualifier("mem") ItemPersister itemPersister) {
+        this.itemPersister = itemPersister;
+    }
 
     /**
      * Fetches a list of all existing items in the system.
      * @return The list of items.
      */
     public List<ItemEntity> listItems() {
-        return inMemoryItems;
+        return itemPersister.getItems();
     }
 
     /**
@@ -29,9 +33,7 @@ public class ItemService {
      * @return The ID of the newly created item
      */
     public int createItem(CreateItemDto itemCreateRequest) {
-        ItemEntity createdItem = new ItemEntity(randomGenerator.nextInt(), itemCreateRequest.getName(), LocalDate.now(), null, null);
-        inMemoryItems.add(createdItem);
-        return createdItem.getId();
+        return itemPersister.createItem(itemCreateRequest);
     }
 
     /**
@@ -40,13 +42,7 @@ public class ItemService {
      * @return The item if it exists, or null otherwise
      */
     public ItemEntity getItemByID(int itemID) {
-        for (ItemEntity item : inMemoryItems) {
-            if (item.getId() == itemID) {
-                return item;
-            }
-        }
-
-        return null;
+        return itemPersister.getItemByID(itemID);
     }
 
     /**
@@ -55,12 +51,7 @@ public class ItemService {
      * @param itemUpdateRequest The fields you want to update on the item
      */
     public void updateItemByID(int itemID, UpdateItemDto itemUpdateRequest) {
-        ItemEntity itemToUpdate = getItemByID(itemID);
-        if (itemToUpdate == null) {
-            return;
-        }
-
-        itemUpdateRequest.apply(itemToUpdate);
+        itemPersister.updateItemByID(itemID, itemUpdateRequest);
     }
 
     /**
@@ -68,17 +59,6 @@ public class ItemService {
      * @param itemID The ID of the item you want to delete
      */
     public void deleteItemByID(int itemID) {
-        int itemIndex = -1;
-        for (int index = 0; index < inMemoryItems.size(); index++) {
-            ItemEntity currentItem = inMemoryItems.get(index);
-            if (currentItem.getId() == itemID) {
-                itemIndex = index;
-                break;
-            }
-        }
-
-        if (itemIndex != -1) {
-            inMemoryItems.remove(itemIndex);
-        }
+        itemPersister.deleteItemByID(itemID);
     }
 }
